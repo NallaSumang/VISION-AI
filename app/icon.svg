@@ -1,27 +1,28 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
   <defs>
-    <linearGradient id="gradCyan" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#22d3ee" />
-      <stop offset="100%" stop-color="#083344" />
+    <linearGradient id="gradCyan" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0891b2" />
+      <stop offset="100%" stop-color="#67e8f9" />
     </linearGradient>
     <filter id="glowCyan">
-      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feGaussianBlur stdDeviation="2.5" result="blur" />
       <feComposite in="SourceGraphic" in2="blur" operator="over" />
     </filter>
   </defs>
   
   <rect width="100" height="100" rx="24" fill="#020202" />
   
-  <!-- Agentic Hexagon Background (AI Core) -->
-  <polygon points="50,10 85,30 85,70 50,90 15,70 15,30" fill="none" stroke="#082f49" stroke-width="2" />
-  <polygon points="50,18 76,33 76,67 50,82 24,67 24,33" fill="none" stroke="#0c4a6e" stroke-width="1" />
+  <!-- Outer Cyber Rings (Memory Loop) -->
+  <circle cx="50" cy="50" r="38" fill="none" stroke="#082f49" stroke-width="3" stroke-dasharray="15 5" />
+  <circle cx="50" cy="50" r="30" fill="none" stroke="#0c4a6e" stroke-width="1" />
   
-  <!-- Top Dragon 'S' Slash -->
-  <path d="M 70,25 L 35,25 L 25,42 L 55,42 L 45,57 L 85,57 L 90,40 L 65,40 Z" fill="url(#gradCyan)" filter="url(#glowCyan)"/>
+  <!-- Sharp Dragon Eye Outline (Vision) -->
+  <path d="M 12 50 Q 50 15 88 50 Q 50 85 12 50 Z" fill="none" stroke="url(#gradCyan)" stroke-width="4" filter="url(#glowCyan)" />
+  <path d="M 20 50 Q 50 25 80 50 Q 50 75 20 50 Z" fill="none" stroke="#164e63" stroke-width="1" />
   
-  <!-- Bottom Dragon 'S' Slash -->
-  <path d="M 30,75 L 65,75 L 75,58 L 45,58 L 55,43 L 15,43 L 10,60 L 35,60 Z" fill="url(#gradCyan)" filter="url(#glowCyan)"/>
-
-  <!-- Glowing Dragon Eye Core -->
-  <polygon points="50,45 56,50 50,55 44,50" fill="#ffffff" filter="url(#glowCyan)"/>
+  <!-- Dragon Pupil (Diamond Slit) -->
+  <polygon points="50,28 58,50 50,72 42,50" fill="url(#gradCyan)" filter="url(#glowCyan)"/>
+  
+  <!-- Core Highlight -->
+  <polygon points="50,35 53,50 50,65 47,50" fill="#ffffff" filter="url(#glowCyan)"/>
 </svg>
