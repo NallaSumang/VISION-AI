@@ -147,8 +147,10 @@ export default function Home() {
             <Bot className="w-6 h-6 text-cyan-600" strokeWidth={1.5} />
           </div>
           <div>
-            <h1 className="text-lg md:text-xl font-light tracking-[0.1em] text-zinc-100">VISION AI</h1>
-            <div className="text-[8px] md:text-[9px] font-medium text-cyan-900/80 tracking-[0.4em] uppercase mt-1">Memory Engine</div>
+            <h1 className="text-lg md:text-xl font-light tracking-[0.1em] text-zinc-100">
+              VISION <span className="font-bold text-cyan-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.8)]">AI</span>
+            </h1>
+            <div className="text-[8px] md:text-[9px] font-medium text-cyan-400/90 tracking-[0.4em] uppercase mt-1">Sumang's Signature Edition</div>
           </div>
         </div>
       </div>
