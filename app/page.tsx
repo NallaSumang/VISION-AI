@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Paperclip, X, Send, Bot, User } from "lucide-react"; 
 import ReactMarkdown from "react-markdown"; 
 
-const BACKEND_URL = "http://127.0.0.1:8000";
+const BACKEND_URL = "https://my-ai-brain-nyj6.onrender.com";
 
 export default function Home() {
   const [messages, setMessages] = useState<any[]>([]);
