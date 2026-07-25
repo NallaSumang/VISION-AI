@@ -170,20 +170,20 @@ export default function Home() {
                 {msg.role === "user" ? <User className="w-3 h-3 md:w-4 md:h-4 text-cyan-400" strokeWidth={1.5} /> : <Bot className="w-4 h-4 md:w-5 md:h-5 text-cyan-700" strokeWidth={1.5} />}
               </div>
               
-              <div className={`rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-sm text-sm font-light leading-relaxed break-words overflow-hidden ${
+              <div className={`rounded-2xl md:rounded-3xl p-4 md:p-5 shadow-sm text-sm font-light leading-relaxed break-words overflow-hidden ${
                   msg.role === "user" 
                   ? "bg-white/[0.02] border border-white/[0.05] text-zinc-200 rounded-tr-sm" 
-                  : "bg-transparent text-zinc-300"
+                  : "bg-cyan-950/10 border border-cyan-900/20 text-zinc-300 rounded-tl-sm"
                 }`}>
                 <ReactMarkdown 
                   components={{
-                      img: ({node, ...props}) => props.src ? <img className="max-w-full md:max-w-md rounded-xl md:rounded-2xl mb-4 shadow-xl border border-white/[0.05]" {...props} /> : null,
+                      img: ({node, ...props}) => props.src ? <img className="max-w-full md:max-w-md rounded-xl md:rounded-2xl mb-4 shadow-xl border border-cyan-900/20" {...props} /> : null,
                       code: ({node, ...props}) => <code className="bg-black/60 rounded px-2 py-1 font-mono text-[10px] md:text-[11px] text-cyan-300/80 border border-white/[0.02]" {...props} />,
                       pre: ({node, ...props}) => <pre className="bg-black/60 rounded-xl md:rounded-2xl p-4 md:p-5 overflow-x-auto my-4 border border-white/[0.02] shadow-inner max-w-[80vw]" {...props} />,
                       strong: ({node, ...props}) => <strong className="font-medium text-cyan-200" {...props} />,
                       p: ({node, ...props}) => <p className="last:mb-0 mb-4 tracking-wide" {...props} />,
-                      ul: ({node, ...props}) => <ul className="list-disc list-outside ml-5 mb-4 space-y-2 marker:text-cyan-900" {...props} />,
-                      ol: ({node, ...props}) => <ol className="list-decimal list-outside ml-5 mb-4 space-y-2 marker:text-cyan-900" {...props} />,
+                      ul: ({node, ...props}) => <ul className="list-disc list-outside ml-5 mb-4 space-y-2 marker:text-cyan-600" {...props} />,
+                      ol: ({node, ...props}) => <ol className="list-decimal list-outside ml-5 mb-4 space-y-2 marker:text-cyan-600" {...props} />,
                       li: ({node, ...props}) => <li className="mb-1" {...props} />
                   }}
                 >
