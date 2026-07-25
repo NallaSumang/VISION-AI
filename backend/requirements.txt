@@ -5,3 +5,4 @@ python-multipart
 pydantic
 pillow
 python-dotenv
+pinecone-client

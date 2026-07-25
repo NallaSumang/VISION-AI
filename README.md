@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Vision AI — Memory-Powered Chatbot
 
-## Getting Started
+An AI chatbot with **persistent vector memory** and **image analysis** capabilities. Unlike standard chatbots that forget everything on refresh, Vision AI remembers facts about you across sessions using Pinecone vector search.
 
-First, run the development server:
+## ⚡ Key Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Long-Term Memory** — Remembers user preferences and facts across sessions via Pinecone vector embeddings
+- **Image Analysis** — Upload images for AI-powered visual analysis using Gemini's multimodal capabilities
+- **Markdown Rendering** — Rich AI responses with code blocks, lists, and formatting
+- **Memory Debug Log** — Transparent display of what the AI remembers about you and confidence scores
+
+## 🏗️ Architecture
+
+```
+User → Next.js Frontend (Vercel) → FastAPI Backend (Render)
+                                        ├── Pinecone (Vector Memory Search)
+                                        └── Gemini 2.0 Flash (AI Response)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+| Layer | Technology | Purpose |
+|---|---|---|
+| Frontend | Next.js, React, Tailwind CSS | Chat UI with markdown rendering |
+| Backend | Python, FastAPI | API server, memory retrieval, AI orchestration |
+| AI Model | Google Gemini 2.0 Flash | Text generation + image understanding |
+| Memory | Pinecone Vector DB | Semantic search over conversation history |
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🚀 Setup
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Backend
+```bash
+cd backend
+pip install -r requirements.txt
+# Create .env with: GEMINI_API_KEY, PINECONE_API_KEY
+python -m uvicorn brain:app --reload --port 8000
+```
 
-## Learn More
+### Frontend
+```bash
+npm install
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open [http://localhost:3005](http://localhost:3005) to start chatting.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🔒 Security
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- CORS locked to allowed origins (configurable via `ALLOWED_ORIGINS` env var)
+- Rate limiting: 10 requests/minute per IP
+- Input validation: max 5000 characters per message
+- API keys stored in `.env` (gitignored)
