@@ -70,7 +70,7 @@ class ChatRequest(BaseModel):
 
 @app.get("/history")
 def get_history():
-    history_file = backend_dir.parent / "chat_history.json"
+    history_file = backend_dir / "chat_history.json"
     if history_file.exists():
         try:
             with open(history_file, "r", encoding="utf-8") as f:
@@ -111,7 +111,7 @@ def retrieve_memory(query: str):
 # --- 3. CHAT ENDPOINT ---
 
 def append_to_history(user_text: str, ai_text: str, has_image: bool):
-    history_file = backend_dir.parent / "chat_history.json"
+    history_file = backend_dir / "chat_history.json"
     history = []
     if history_file.exists():
         try:
