@@ -104,15 +104,41 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center bg-[#050505] p-4 md:p-8 font-sans text-zinc-300 selection:bg-cyan-900/30 overflow-hidden relative">
       
-      {/* LUXURY BACKGROUND EFFECTS */}
-      <div className="fixed inset-0 z-0 bg-[#000305] pointer-events-none overflow-hidden">
-        {/* Deep Cyan/Teal Aurora Orbs */}
-        <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-[#0891b2] rounded-full blur-[120px] opacity-20 animate-pulse" style={{ animationDuration: '8s' }} />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-[#0d9488] rounded-full blur-[150px] opacity-15 animate-pulse" style={{ animationDuration: '12s', animationDelay: '2s' }} />
-        <div className="absolute top-[30%] left-[20%] w-[40%] h-[40%] bg-[#082f49] rounded-full blur-[100px] opacity-40 animate-pulse" style={{ animationDuration: '10s', animationDelay: '4s' }} />
+      {/* NEURAL VISION HUD & DATA STREAMS (ANIME VIBE) */}
+      <div className="fixed inset-0 z-0 bg-[#000508] overflow-hidden pointer-events-none">
+        <style>{`
+          @keyframes data-fall {
+            0% { transform: translateY(-100vh); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
+          }
+          @keyframes pulse-ring {
+            0% { transform: scale(0.8); opacity: 0.8; }
+            100% { transform: scale(1.5); opacity: 0; }
+          }
+        `}</style>
+
+        {/* Deep gradient base */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,#001a22_0%,#000000_100%)]" />
+
+        {/* Neural Network Rings (Anime HUD) */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border border-cyan-500/10 rounded-full" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] border border-cyan-500/5 rounded-full border-dashed animate-[spin_60s_linear_infinite]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] border border-teal-500/20 rounded-full animate-[pulse-ring_4s_cubic-bezier(0.215,0.61,0.355,1)_infinite]" />
+
+        {/* Data Streams (Matrix/Anime style) */}
+        <div className="absolute left-[10%] w-[1px] h-32 bg-gradient-to-b from-transparent via-cyan-400 to-transparent animate-[data-fall_3s_linear_infinite]" />
+        <div className="absolute left-[30%] w-[2px] h-48 bg-gradient-to-b from-transparent via-teal-400 to-transparent animate-[data-fall_5s_linear_infinite_1s]" />
+        <div className="absolute left-[60%] w-[1px] h-24 bg-gradient-to-b from-transparent via-cyan-300 to-transparent animate-[data-fall_4s_linear_infinite_2s]" />
+        <div className="absolute left-[85%] w-[2px] h-64 bg-gradient-to-b from-transparent via-blue-400 to-transparent animate-[data-fall_6s_linear_infinite_0.5s]" />
+
+        {/* Glowing Nexus Points */}
+        <div className="absolute top-1/4 left-1/4 w-3 h-3 bg-cyan-400 rounded-full shadow-[0_0_20px_5px_rgba(0,255,255,0.8)] animate-[pulse_3s_ease-in-out_infinite]" />
+        <div className="absolute bottom-1/3 right-1/4 w-2 h-2 bg-teal-400 rounded-full shadow-[0_0_15px_4px_rgba(0,255,150,0.8)] animate-[pulse_4s_ease-in-out_infinite_1s]" />
         
-        {/* Cinematic Noise Overlay */}
-        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }} />
+        {/* Vignette */}
+        <div className="absolute inset-0 shadow-[inset_0_0_200px_rgba(0,0,0,1)]" />
       </div>
 
       <div className="w-full max-w-4xl flex items-center justify-between mb-8 mt-2 relative z-10">
