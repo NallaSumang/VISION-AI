@@ -102,49 +102,57 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center bg-black p-4 font-sans text-zinc-100">
-      <div className="w-full max-w-4xl flex items-center justify-between mb-8 mt-4">
-        <div className="flex items-center gap-3">
-          <div className="bg-purple-600/20 p-2 rounded-xl">
-            <Bot className="w-6 h-6 text-purple-400" />
+    <main className="flex min-h-screen flex-col items-center bg-[#050505] p-4 md:p-8 font-sans text-zinc-300 selection:bg-cyan-900/30 overflow-hidden relative">
+      
+      {/* BACKGROUND EFFECTS */}
+      <div className="fixed inset-0 z-0 bg-[#050505] pointer-events-none">
+        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-cyan-950/20 rounded-full blur-[150px]" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-teal-950/20 rounded-full blur-[150px]" />
+      </div>
+
+      <div className="w-full max-w-4xl flex items-center justify-between mb-8 mt-2 relative z-10">
+        <div className="flex items-center gap-4">
+          <div className="bg-gradient-to-br from-cyan-950 to-[#050505] border border-white/[0.05] p-3 rounded-2xl shadow-[0_0_30px_rgba(8,145,178,0.1)]">
+            <Bot className="w-6 h-6 text-cyan-600" strokeWidth={1.5} />
           </div>
-          <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">
-            Memory AI
-          </h1>
+          <div>
+            <h1 className="text-xl font-light tracking-[0.1em] text-zinc-100">VISION AI</h1>
+            <div className="text-[9px] font-medium text-cyan-900/80 tracking-[0.4em] uppercase mt-1">Memory Engine</div>
+          </div>
         </div>
       </div>
       
-      <div className="flex-1 w-full max-w-4xl flex flex-col gap-6 overflow-y-auto mb-6 p-6 rounded-2xl bg-zinc-900/50 border border-zinc-800 shadow-2xl backdrop-blur-sm">
+      <div className="flex-1 w-full max-w-4xl flex flex-col gap-6 overflow-y-auto mb-6 p-6 md:p-10 rounded-[2rem] bg-white/[0.01] border border-white/[0.02] shadow-[0_0_50px_rgba(0,0,0,0.5)] backdrop-blur-3xl relative z-10 custom-scrollbar">
         {messages.length === 0 && !isLoading && (
-          <div className="h-full flex flex-col items-center justify-center text-zinc-500 gap-4">
-            <Bot className="w-12 h-12 text-zinc-700" />
-            <p>No memories yet. Say hello!</p>
+          <div className="h-full flex flex-col items-center justify-center text-zinc-500 gap-6 opacity-50">
+            <Bot className="w-16 h-16 text-zinc-700" strokeWidth={1} />
+            <p className="font-light tracking-widest uppercase text-[10px]">Neural link established. Awaiting input.</p>
           </div>
         )}
         
         {messages.map((msg, index) => (
           <div key={index} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-            <div className={`flex gap-3 max-w-[85%] ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-1 ${
-                msg.role === "user" ? "bg-purple-600" : "bg-zinc-800 border border-zinc-700"
+            <div className={`flex gap-4 max-w-[85%] ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}>
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 mt-1 border ${
+                msg.role === "user" ? "bg-cyan-950/30 border-cyan-900/50 shadow-[0_0_15px_rgba(8,145,178,0.2)]" : "bg-black/50 border-white/[0.05]"
               }`}>
-                {msg.role === "user" ? <User className="w-5 h-5 text-white" /> : <Bot className="w-5 h-5 text-purple-400" />}
+                {msg.role === "user" ? <User className="w-4 h-4 text-cyan-400" strokeWidth={1.5} /> : <Bot className="w-5 h-5 text-cyan-700" strokeWidth={1.5} />}
               </div>
               
-              <div className={`rounded-2xl p-4 shadow-sm text-sm leading-relaxed ${
+              <div className={`rounded-3xl p-6 shadow-sm text-sm font-light leading-relaxed ${
                   msg.role === "user" 
-                  ? "bg-purple-600 text-white rounded-tr-sm" 
-                  : "bg-zinc-800 text-zinc-200 border border-zinc-700 rounded-tl-sm"
+                  ? "bg-white/[0.02] border border-white/[0.05] text-zinc-200 rounded-tr-sm" 
+                  : "bg-transparent text-zinc-300"
                 }`}>
                 <ReactMarkdown 
                   components={{
-                      img: ({node, ...props}) => props.src ? <img className="max-w-md w-full rounded-lg mb-3 shadow-md border border-zinc-700/50" {...props} /> : null,
-                      code: ({node, ...props}) => <code className="bg-black/40 rounded px-1.5 py-0.5 font-mono text-purple-300" {...props} />,
-                      pre: ({node, ...props}) => <pre className="bg-black/40 rounded-lg p-3 overflow-x-auto my-2 border border-zinc-700/50" {...props} />,
-                      strong: ({node, ...props}) => <strong className="font-semibold text-purple-300" {...props} />,
-                      p: ({node, ...props}) => <p className="last:mb-0 mb-3" {...props} />,
-                      ul: ({node, ...props}) => <ul className="list-disc list-outside ml-4 mb-3" {...props} />,
-                      ol: ({node, ...props}) => <ol className="list-decimal list-outside ml-4 mb-3" {...props} />,
+                      img: ({node, ...props}) => props.src ? <img className="max-w-md w-full rounded-2xl mb-4 shadow-xl border border-white/[0.05]" {...props} /> : null,
+                      code: ({node, ...props}) => <code className="bg-black/60 rounded px-2 py-1 font-mono text-[11px] text-cyan-300/80 border border-white/[0.02]" {...props} />,
+                      pre: ({node, ...props}) => <pre className="bg-black/60 rounded-2xl p-5 overflow-x-auto my-4 border border-white/[0.02] shadow-inner" {...props} />,
+                      strong: ({node, ...props}) => <strong className="font-medium text-cyan-200" {...props} />,
+                      p: ({node, ...props}) => <p className="last:mb-0 mb-4 tracking-wide" {...props} />,
+                      ul: ({node, ...props}) => <ul className="list-disc list-outside ml-5 mb-4 space-y-2 marker:text-cyan-900" {...props} />,
+                      ol: ({node, ...props}) => <ol className="list-decimal list-outside ml-5 mb-4 space-y-2 marker:text-cyan-900" {...props} />,
                       li: ({node, ...props}) => <li className="mb-1" {...props} />
                   }}
                 >
@@ -157,15 +165,17 @@ export default function Home() {
         
         {isLoading && (
             <div className="flex justify-start">
-              <div className="flex gap-3 max-w-[85%]">
-                <div className="w-8 h-8 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center shrink-0 mt-1">
-                  <Bot className="w-5 h-5 text-purple-400" />
+              <div className="flex gap-4 max-w-[85%]">
+                <div className="w-10 h-10 rounded-full bg-black/50 border border-white/[0.05] flex items-center justify-center shrink-0 mt-1">
+                  <Bot className="w-5 h-5 text-cyan-700" strokeWidth={1.5} />
                 </div>
-                <div className="bg-zinc-800 border border-zinc-700 p-4 rounded-2xl rounded-tl-sm text-zinc-400 text-sm flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 bg-purple-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                  <div className="w-1.5 h-1.5 bg-purple-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                  <div className="w-1.5 h-1.5 bg-purple-500 rounded-full animate-bounce"></div>
-                  <span className="ml-2 font-medium">Recalling memory...</span>
+                <div className="bg-transparent p-6 rounded-3xl rounded-tl-sm text-cyan-700 text-xs tracking-widest uppercase flex items-center gap-4">
+                  <div className="flex gap-1.5">
+                    <div className="w-1 h-1 bg-cyan-600 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                    <div className="w-1 h-1 bg-cyan-600 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                    <div className="w-1 h-1 bg-cyan-600 rounded-full animate-bounce"></div>
+                  </div>
+                  <span className="font-medium">Accessing Memory...</span>
                 </div>
               </div>
             </div>
@@ -173,23 +183,23 @@ export default function Home() {
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="w-full max-w-4xl flex flex-col gap-3">
+      <div className="w-full max-w-4xl flex flex-col gap-4 relative z-10">
         {selectedImage && (
-            <div className="flex items-center justify-between bg-zinc-900 border border-purple-500/30 p-3 rounded-xl w-64 shadow-lg relative group">
-                <div className="flex items-center gap-3 overflow-hidden">
-                  <img src={selectedImage} alt="Preview" className="w-12 h-12 object-cover rounded-md" />
-                  <span className="text-sm text-zinc-300 truncate font-medium">Image attached</span>
+            <div className="flex items-center justify-between bg-black/80 border border-cyan-900/30 p-3 rounded-2xl w-72 shadow-2xl backdrop-blur-md relative group">
+                <div className="flex items-center gap-4 overflow-hidden">
+                  <img src={selectedImage} alt="Preview" className="w-14 h-14 object-cover rounded-xl" />
+                  <span className="text-[10px] uppercase tracking-widest text-zinc-400 truncate font-medium">Visual Matrix Loaded</span>
                 </div>
                 <button 
                   onClick={() => setSelectedImage(null)}
-                  className="bg-black/50 p-1.5 rounded-full hover:bg-red-500/20 text-zinc-400 hover:text-red-400 transition-colors absolute right-2"
+                  className="bg-white/[0.05] p-2 rounded-full hover:bg-red-500/10 text-zinc-500 hover:text-red-400 transition-colors absolute right-3"
                 >
-                  <X className="w-4 h-4"/>
+                  <X className="w-3 h-3"/>
                 </button>
             </div>
         )}
 
-        <div className="flex gap-2 items-end relative">
+        <div className="flex gap-3 items-end relative">
             <input 
                 type="file" 
                 ref={fileInputRef} 
@@ -201,27 +211,27 @@ export default function Home() {
             <Button 
                 variant="outline" 
                 size="icon"
-                className="shrink-0 h-12 w-12 rounded-xl bg-zinc-900 border-zinc-700 text-zinc-400 hover:text-purple-400 hover:border-purple-500 hover:bg-purple-500/10 transition-all"
+                className="shrink-0 h-16 w-16 rounded-2xl bg-white/[0.02] border-white/[0.05] text-zinc-500 hover:text-cyan-400 hover:border-cyan-900/50 hover:bg-cyan-950/20 transition-all duration-500 shadow-xl"
                 onClick={() => fileInputRef.current?.click()}
             >
-                <Paperclip className="w-5 h-5" />
+                <Paperclip className="w-5 h-5" strokeWidth={1.5} />
             </Button>
 
             <div className="relative flex-1">
               <Input 
                 value={input}
                 onChange={(e) => setInput(e.target.value)} 
-                placeholder="Ask your memory anything..." 
-                className="h-12 bg-zinc-900 text-white border-zinc-700 focus-visible:ring-1 focus-visible:ring-purple-500 focus-visible:border-purple-500 rounded-xl pr-14 text-base"
+                placeholder="Query the neural network..." 
+                className="h-16 bg-white/[0.02] text-zinc-200 border-white/[0.05] focus-visible:ring-1 focus-visible:ring-cyan-900 focus-visible:border-cyan-800 rounded-2xl pr-16 pl-6 text-base font-light tracking-wide backdrop-blur-3xl shadow-xl placeholder:text-zinc-700"
                 onKeyDown={(e) => e.key === "Enter" && handleSend()} 
               />
               <Button 
                   onClick={handleSend} 
                   disabled={isLoading || (!input.trim() && !selectedImage)}
                   size="icon"
-                  className="absolute right-1.5 top-1.5 h-9 w-9 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors disabled:opacity-50"
+                  className="absolute right-2 top-2 bottom-2 h-12 w-12 bg-white/[0.05] border border-white/[0.05] hover:bg-cyan-950/40 hover:border-cyan-900/50 text-cyan-500 rounded-xl transition-all duration-500 disabled:opacity-30 disabled:hover:bg-transparent"
               >
-                  <Send className="w-4 h-4" />
+                  <Send className="w-4 h-4 ml-0.5" strokeWidth={1.5} />
               </Button>
             </div>
         </div>
