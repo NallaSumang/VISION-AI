@@ -104,14 +104,15 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center bg-[#050505] p-4 md:p-8 font-sans text-zinc-300 selection:bg-cyan-900/30 overflow-hidden relative">
       
-      {/* BACKGROUND EFFECTS */}
-      <div className="fixed inset-0 z-0 bg-[#050505] pointer-events-none overflow-hidden">
-        {/* Memory Matrix Dots */}
-        <div className="absolute inset-0 bg-[radial-gradient(#0891b233_1px,transparent_1px)] [background-size:24px_24px] opacity-30 [mask-image:radial-gradient(ellipse_80%_80%_at_50%_50%,#000_20%,transparent_100%)]" />
+      {/* LUXURY BACKGROUND EFFECTS */}
+      <div className="fixed inset-0 z-0 bg-[#000305] pointer-events-none overflow-hidden">
+        {/* Deep Cyan/Teal Aurora Orbs */}
+        <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-[#0891b2] rounded-full blur-[120px] opacity-20 animate-pulse" style={{ animationDuration: '8s' }} />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-[#0d9488] rounded-full blur-[150px] opacity-15 animate-pulse" style={{ animationDuration: '12s', animationDelay: '2s' }} />
+        <div className="absolute top-[30%] left-[20%] w-[40%] h-[40%] bg-[#082f49] rounded-full blur-[100px] opacity-40 animate-pulse" style={{ animationDuration: '10s', animationDelay: '4s' }} />
         
-        {/* Slow Pulsing Auras */}
-        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-cyan-950/30 rounded-full blur-[150px] animate-pulse" style={{ animationDuration: '4s' }} />
-        <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-teal-950/20 rounded-full blur-[150px] animate-pulse" style={{ animationDuration: '6s' }} />
+        {/* Cinematic Noise Overlay */}
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }} />
       </div>
 
       <div className="w-full max-w-4xl flex items-center justify-between mb-8 mt-2 relative z-10">
