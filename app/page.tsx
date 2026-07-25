@@ -105,9 +105,13 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center bg-[#050505] p-4 md:p-8 font-sans text-zinc-300 selection:bg-cyan-900/30 overflow-hidden relative">
       
       {/* BACKGROUND EFFECTS */}
-      <div className="fixed inset-0 z-0 bg-[#050505] pointer-events-none">
-        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-cyan-950/20 rounded-full blur-[150px]" />
-        <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-teal-950/20 rounded-full blur-[150px]" />
+      <div className="fixed inset-0 z-0 bg-[#050505] pointer-events-none overflow-hidden">
+        {/* Memory Matrix Dots */}
+        <div className="absolute inset-0 bg-[radial-gradient(#0891b233_1px,transparent_1px)] [background-size:24px_24px] opacity-30 [mask-image:radial-gradient(ellipse_80%_80%_at_50%_50%,#000_20%,transparent_100%)]" />
+        
+        {/* Slow Pulsing Auras */}
+        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-cyan-950/30 rounded-full blur-[150px] animate-pulse" style={{ animationDuration: '4s' }} />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-teal-950/20 rounded-full blur-[150px] animate-pulse" style={{ animationDuration: '6s' }} />
       </div>
 
       <div className="w-full max-w-4xl flex items-center justify-between mb-8 mt-2 relative z-10">
