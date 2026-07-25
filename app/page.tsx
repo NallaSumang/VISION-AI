@@ -102,7 +102,7 @@ export default function Home() {
   };
 
   return (
-    <main className="flex h-[100dvh] flex-col items-center bg-[#050505] p-2 md:p-8 font-sans text-zinc-300 selection:bg-cyan-900/30 overflow-hidden relative">
+    <main className="flex h-[100dvh] flex-col items-center bg-transparent p-2 md:p-8 font-sans text-zinc-300 selection:bg-cyan-900/30 overflow-hidden relative">
       
       {/* NEURAL VISION HUD & DATA STREAMS (ANIME VIBE) */}
       <div className="fixed inset-0 z-0 bg-[#000508] overflow-hidden pointer-events-none">
