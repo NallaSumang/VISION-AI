@@ -110,6 +110,41 @@ def retrieve_memory(query: str):
 
 # --- 3. CHAT ENDPOINT ---
 
+def append_to_history(user_text: str, ai_text: str, has_image: bool):
+    history_file = backend_dir.parent / "chat_history.json"
+    history = []
+    if history_file.exists():
+        try:
+            with open(history_file, "r", encoding="utf-8") as f:
+                history = json.load(f)
+        except Exception:
+            pass
+            
+    # Format according to what the frontend expects
+    user_parts = [{"text": user_text}]
+    if has_image:
+        user_parts.append({"text": "[User uploaded an image]"})
+        
+    history.append({
+        "role": "user",
+        "parts": user_parts
+    })
+    
+    history.append({
+        "role": "model",
+        "parts": [{"text": ai_text}]
+    })
+    
+    # Keep only last 100 messages (50 turns) to prevent file bloating
+    history = history[-100:]
+    
+    try:
+        with open(history_file, "w", encoding="utf-8") as f:
+            json.dump(history, f, indent=2)
+    except Exception as e:
+        print(f"Error saving history: {e}")
+
+
 @app.post("/chat")
 def chat_endpoint(request: ChatRequest):
     print(f"📨 Incoming: {request.message}")
@@ -147,8 +182,13 @@ def chat_endpoint(request: ChatRequest):
         print(f"⚠️ API ERROR: {e}")
         ai_reply = f"⚠️ **API ERROR:** {e}\n\nBUT... I successfully searched your memory! See the log above. ☝️"
 
-    # 4. Return Visible Debug Info
-    return {"reply": f"🧠 **MEMORY LOG:**{debug_info}\n\n🤖 **AI:**\n{ai_reply}"}
+    full_reply = f"🧠 **MEMORY LOG:**{debug_info}\n\n🤖 **AI:**\n{ai_reply}"
+
+    # 4. Save to global history
+    append_to_history(request.message, full_reply, bool(request.image))
+
+    # 5. Return Visible Debug Info
+    return {"reply": full_reply}
 
 
 if __name__ == "__main__":
