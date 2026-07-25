@@ -1,7 +1,6 @@
 <div align="center">
   <h1>👁️ VISION AI</h1>
   <p>A real-time AI memory engine utilizing Vector Embeddings for continuous conversation retrieval and state persistence.</p>
-  <p><i>Built from the ground up by Sumang</i></p>
 </div>
 
 ---
