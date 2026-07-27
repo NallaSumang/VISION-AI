@@ -1,43 +1,38 @@
 <div align="center">
-  <h1>👁️ VISION AI</h1>
-  <p>A real-time AI memory engine utilizing Vector Embeddings for continuous conversation retrieval and state persistence.</p>
+  <h1>👁️ VISION-AI</h1>
+  <p>A multimodal LLM engine with persistent local file-based memory.</p>
 </div>
 
 ---
 
-## ⚙️ Core Architecture
+## 📖 Overview
 
-This project strictly separates the user interface from the heavy vector mathematical operations for optimal performance.
+**VISION-AI** is a robust computer vision and generative AI application combining a modern Next.js interface with a local Python processing engine. The system captures multimodal inputs, processes them via a local backend architecture, and serializes user interactions securely to disk.
 
-- **Frontend:** Next.js 15, TailwindCSS, React.
-- **Backend:** FastAPI (Python).
-- **LLM Reasoning:** Google `gemini-2.5-flash` / LLaMA 3.3.
-- **Memory (RAG):** Pinecone Vector Database. Converts text into high-dimensional vector embeddings to retrieve semantically similar past conversations.
-- **Local State:** Uses a local `chat_history.json` to persist the immediate chat log for the frontend to restore upon browser reload.
+## 🏗️ System Architecture
 
-## 🤖 The Memory Engine (AI Models)
+- **Frontend Interface:** Next.js application (`app/layout.tsx`, `app/page.tsx`) handling real-time multimodal user interactions.
+- **Backend Engine:** A local Python daemon (`backend/main.py`, `backend/brain.py`) that processes LLM requests and image parsing.
+- **Local State Persistence:** The application manages conversation state by writing directly to a local JSON file (`chat_history.json`).
 
-This repository operates using 2 specialized AI models working in tandem to simulate infinite memory without exceeding standard token limits:
+*Note on Scalability:* This architecture is explicitly designed as a local-first application. Because state is managed via direct disk I/O (`chat_history.json`), deploying this to a serverless edge environment (e.g., AWS Lambda, Vercel) which utilizes ephemeral file systems will result in data loss upon container teardown. For horizontal scaling and edge deployment, this local JSON write must be swapped out for a persistent Redis cache or managed database.
 
-1. **The Embedding AI (`text-embedding-004`):** 
-   When a user sends a message, this model converts the raw text into a 768-dimensional mathematical vector. This vector is sent securely to a Pinecone Vector Database, which calculates cosine similarity to instantly find past conversations with the same mathematical meaning.
-   
-2. **The Reasoning AI (LLaMA 3.3 / Gemini):** 
-   Once the Pinecone database retrieves the relevant past memories, this reasoning model processes the historical context alongside the new user prompt. This allows the AI to generate answers while referencing previous interactions, bypassing the amnesia found in traditional stateless chatbots.
+## 🚀 Getting Started
 
----
-
-## 🚀 Deployment & Usage
-
-### 1. Initialize the Backend
+### 1. Initialize the Python Backend
+Ensure you have Python 3.11+ installed.
 ```bash
 cd backend
 pip install -r requirements.txt
-python brain.py
+python main.py
 ```
 
-### 2. Launch the Frontend
+### 2. Launch the Next.js Frontend
+In a new terminal window:
 ```bash
 npm install
 npm run dev
 ```
+
+## 📜 License
+Distributed under the MIT License.
