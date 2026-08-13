@@ -1,37 +1,79 @@
 <div align="center">
   <h1>👁️ VISION-AI</h1>
-  <p>A multimodal LLM engine with persistent local file-based memory.</p>
+  <p>A multimodal AI engine with persistent vector memory and split cloud deployment.</p>
 </div>
 
 ---
 
 ## 📖 Overview
 
-**VISION-AI** is a robust computer vision and generative AI application combining a modern Next.js interface with a local Python processing engine. The system captures multimodal inputs, processes them via a local backend architecture, and serializes user interactions securely to disk.
+**VISION-AI** is a multimodal generative AI application combining a Next.js frontend with a Python/FastAPI backend. The system captures text and image inputs, processes them through Google Gemini for inference, and persists conversational memory via Pinecone vector search for long-duration context retention.
 
 ## 🏗️ System Architecture
 
-- **Frontend Interface:** Next.js application (`app/layout.tsx`, `app/page.tsx`) handling real-time multimodal user interactions.
-- **Backend Engine:** A local Python daemon (`backend/main.py`, `backend/brain.py`) that processes LLM requests and image parsing.
-- **Local State Persistence:** The application manages conversation state by writing directly to a local JSON file (`chat_history.json`).
+```
+┌─────────────────────┐         ┌──────────────────────────┐
+│   Next.js Frontend  │  HTTP   │   Python/FastAPI Backend  │
+│   (Vercel)          │────────▶│   (Render: "my-ai-brain") │
+│   Port 3005 (dev)   │         │                          │
+└─────────────────────┘         │  ┌────────────────────┐  │
+                                │  │ Google Gemini       │  │
+                                │  │ (gemini-2.0-flash-  │  │
+                                │  │  lite-preview)      │  │
+                                │  └────────────────────┘  │
+                                │  ┌────────────────────┐  │
+                                │  │ Pinecone           │  │
+                                │  │ (vision-memory idx) │  │
+                                │  └────────────────────┘  │
+                                │  ┌────────────────────┐  │
+                                │  │ chat_history.json   │  │
+                                │  │ (local file I/O)    │  │
+                                │  └────────────────────┘  │
+                                └──────────────────────────┘
+```
 
-*Note on Scalability:* This architecture is explicitly designed as a local-first application. Because state is managed via direct disk I/O (`chat_history.json`), deploying this to a serverless edge environment (e.g., AWS Lambda, Vercel) which utilizes ephemeral file systems will result in data loss upon container teardown. For horizontal scaling and edge deployment, this local JSON write must be swapped out for a persistent Redis cache or managed database.
+- **Frontend Interface:** Next.js 16 application handling real-time multimodal user interactions (text + image upload). Deployed on **Vercel**.
+- **Backend Engine:** Python FastAPI service (`backend/brain.py`) that processes LLM requests and image parsing. Deployed on **Render** as the `my-ai-brain` service.
+- **AI Model:** Google Gemini (`gemini-2.0-flash-lite-preview-02-05`) via the `google-genai` SDK for text generation and image understanding.
+- **Vector Memory:** Pinecone (`vision-memory` index) for persistent semantic memory across conversations — enabling long-duration context retention.
+- **Local State:** Conversation history is also serialized to `chat_history.json` for local backup.
+
+### ⚠️ Scalability Note
+
+The `chat_history.json` file-based persistence works on Render's persistent disk but would fail on ephemeral serverless environments (AWS Lambda, Vercel Functions). The Pinecone vector store provides the durable memory layer for production.
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+| :--- | :--- |
+| **Frontend** | Next.js 16, React 19, TypeScript |
+| **Backend** | Python 3.11, FastAPI, Uvicorn |
+| **AI Model** | Google Gemini (`gemini-2.0-flash-lite-preview`) |
+| **Vector DB** | Pinecone (`vision-memory` index) |
+| **UI** | shadcn/ui (Radix), Tailwind CSS v4, Lucide icons |
+| **Frontend Hosting** | Vercel |
+| **Backend Hosting** | Render (`my-ai-brain`) |
 
 ## 🚀 Getting Started
 
 ### 1. Initialize the Python Backend
-Ensure you have Python 3.11+ installed.
 ```bash
 cd backend
 pip install -r requirements.txt
-python main.py
+python brain.py
 ```
 
 ### 2. Launch the Next.js Frontend
-In a new terminal window:
 ```bash
 npm install
 npm run dev
+```
+
+### 3. Environment Variables
+Create `backend/.env`:
+```env
+GEMINI_API_KEY=<your-gemini-key>
+PINECONE_API_KEY=<your-pinecone-key>
 ```
 
 ## 📜 License
