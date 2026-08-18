@@ -196,7 +196,7 @@ def chat_endpoint(request: ChatRequest):
             contents.append(types.Part.from_bytes(data=image_bytes, mime_type=mime_type))
         except Exception as e:
             print(f"⚠️ Error parsing image: {e}")
-            full_reply = f"🧠 **MEMORY LOG:**\n⚠️ Image processing failed.\n\n🤖 **AI:**\nI could not read the uploaded image due to an encoding error."
+            full_reply = f"⚠️ Image processing failed. I could not read the uploaded file due to an encoding error."
             return {"reply": full_reply}
 
     # 3. Get AI Reply (WITH CRASH PROTECTION)
@@ -209,9 +209,9 @@ def chat_endpoint(request: ChatRequest):
             ai_reply = response.text
         except Exception as e:
             print(f"⚠️ API ERROR: {e}")
-            ai_reply = f"⚠️ **API ERROR:** {e}\n\nBUT... I successfully searched your memory! See the log above. ☝️"
+            ai_reply = f"⚠️ **API ERROR:** {e}"
 
-    full_reply = f"🧠 **MEMORY LOG:**{debug_info}\n\n🤖 **AI:**\n{ai_reply}"
+    full_reply = ai_reply
 
     # 4. Save to global history
     append_to_history(request.message, full_reply, bool(request.image))
