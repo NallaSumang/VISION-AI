@@ -7,7 +7,7 @@
 
 ## 📖 Overview
 
-**VISION-AI** is a multi-modal generative AI application combining a Next.js frontend with a Python/FastAPI backend. The system captures text, images, and documents (PDF/CSV/JSON), processes them through Google's absolute latest Gemini models for high-speed inference, and persists conversational memory via a Pinecone vector database.
+**VISION-AI** is a multi-modal generative AI application combining a Next.js frontend with a Python/FastAPI backend. The system captures text, images, and documents (PDF/CSV/JSON), processes them through Google Gemini models for inference, and persists conversational memory via a Pinecone vector database.
 
 ## 🏗️ System Architecture
 
@@ -31,11 +31,11 @@
                                 └──────────────────────────┘
 ```
 
-- **Frontend Interface:** Next.js 16 application handling real-time multi-modal user interactions (text + image + document upload). Deployed on **Vercel**.
-- **Backend Engine:** Python FastAPI service (`backend/brain.py`) with strict dependency pinning for deterministic deploys. Deployed on **Render** as the `my-ai-brain` service.
-- **AI Model:** Google Gemini (`gemini-3.6-flash`) via the modern `google-genai` SDK for ultra-fast text, document, and image understanding.
-- **Vector Memory:** Pinecone (`vision-memory` index) for persistent semantic memory. Embeddings use `gemini-embedding-2` scaled down elastically to 768-dimensions for legacy index compatibility.
-- **Local State:** Ephemeral conversation history is serialized to `chat_history.json` (wiped cleanly between server reboots).
+- **Frontend Interface:** Next.js 16 application handling multi-modal user interactions (text + image + document upload). Deployed on **Vercel**.
+- **Backend Engine:** Python FastAPI service (`backend/brain.py`) with dependency pinning. Deployed on **Render** as the `my-ai-brain` service.
+- **AI Model:** Google Gemini (`gemini-3.6-flash`) via the `google-genai` SDK for text, document, and image understanding.
+- **Vector Memory:** Pinecone (`vision-memory` index) for persistent semantic memory. Embeddings use `gemini-embedding-2` scaled to 768-dimensions for index compatibility.
+- **Local State:** Ephemeral conversation history is serialized to `chat_history.json` (wiped between server reboots).
 
 ### ⚠️ Scalability Note
 
@@ -46,7 +46,7 @@ The `chat_history.json` file is explicitly removed from git tracking to prevent 
 | Layer | Technology |
 | :--- | :--- |
 | **Frontend** | Next.js 16, React 19, TypeScript |
-| **Backend** | Python 3.11, FastAPI (Hard-pinned) |
+| **Backend** | Python 3.11, FastAPI (Pinned dependencies) |
 | **AI Model** | Google Gemini (`gemini-3.6-flash`) |
 | **Vector DB** | Pinecone (`gemini-embedding-2` @ 768d) |
 | **UI** | shadcn/ui (Radix), Tailwind CSS v4, Lucide icons |
