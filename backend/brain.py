@@ -112,9 +112,12 @@ def retrieve_memory(query: str):
 
         if results.get('matches'):
             for match in results['matches']:
-                # FORCE ACCEPT EVERYTHING for testing
-                text = match['metadata']['text']
                 score = match['score']
+                # Filter out irrelevant memories (threshold 25%)
+                if score < 0.25:
+                    continue
+                    
+                text = match['metadata']['text']
                 debug_log += f"\n- Found: '{text}' ({int(score*100)}%)"
                 memories += f"- {text}\n"
         else:
