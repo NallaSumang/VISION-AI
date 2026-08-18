@@ -99,7 +99,10 @@ def retrieve_memory(query: str):
         
     try:
         response = client.models.embed_content(
-            model="gemini-embedding-2", contents=query)
+            model="gemini-embedding-2", 
+            contents=query,
+            config=types.EmbedContentConfig(output_dimensionality=768)
+        )
         query_vector = response.embeddings[0].values
         results = index.query(vector=query_vector,
                               top_k=3, include_metadata=True)
