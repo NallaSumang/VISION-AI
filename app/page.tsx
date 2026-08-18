@@ -12,7 +12,7 @@ export default function Home() {
   const [messages, setMessages] = useState<any[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null); 
+  const [selectedFile, setSelectedFile] = useState<string | null>(null); 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -52,27 +52,28 @@ export default function Home() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setSelectedImage(reader.result as string);
+        setSelectedFile(reader.result as string);
       };
       reader.readAsDataURL(file);
     }
   };
 
   const handleSend = async () => {
-    if (!input.trim() && !selectedImage) return;
+    if (!input.trim() && !selectedFile) return;
 
-    const displayContent = selectedImage 
-      ? `![Uploaded Image](${selectedImage})\n\n${input}` 
+    const isImage = selectedFile?.startsWith("data:image");
+    const displayContent = selectedFile 
+      ? (isImage ? `![Uploaded Image](${selectedFile})\n\n${input}` : `📄 [Attached Document]\n\n${input}`)
       : input;
       
     const userMessage = { role: "user", content: displayContent };
     setMessages((prev) => [...prev, userMessage]);
     
     const currentInput = input;
-    const currentImage = selectedImage;
+    const currentImage = selectedFile;
     
     setInput("");
-    setSelectedImage(null);
+    setSelectedFile(null);
     setIsLoading(true);
 
     try {
@@ -217,14 +218,18 @@ export default function Home() {
       </div>
 
       <div className="w-full max-w-4xl flex flex-col gap-3 relative z-10 px-2 md:px-0">
-        {selectedImage && (
+        {selectedFile && (
             <div className="flex items-center justify-between bg-black/80 border border-cyan-900/30 p-2 md:p-3 rounded-2xl w-full md:w-72 shadow-2xl backdrop-blur-md relative group">
                 <div className="flex items-center gap-3 md:gap-4 overflow-hidden">
-                  <img src={selectedImage} alt="Preview" className="w-10 h-10 md:w-14 md:h-14 object-cover rounded-xl" />
-                  <span className="text-[9px] md:text-[10px] uppercase tracking-widest text-zinc-400 truncate font-medium">Visual Matrix Loaded</span>
+                  {selectedFile.startsWith("data:image") ? (
+                    <img src={selectedFile} alt="Preview" className="w-10 h-10 md:w-14 md:h-14 object-cover rounded-xl" />
+                  ) : (
+                    <div className="w-10 h-10 md:w-14 md:h-14 bg-white/10 rounded-xl flex items-center justify-center text-xl">📄</div>
+                  )}
+                  <span className="text-[9px] md:text-[10px] uppercase tracking-widest text-zinc-400 truncate font-medium">Data Matrix Loaded</span>
                 </div>
                 <button 
-                  onClick={() => setSelectedImage(null)}
+                  onClick={() => setSelectedFile(null)}
                   className="bg-white/[0.05] p-2 rounded-full hover:bg-red-500/10 text-zinc-500 hover:text-red-400 transition-colors"
                 >
                   <X className="w-3 h-3"/>
@@ -237,7 +242,7 @@ export default function Home() {
                 type="file" 
                 ref={fileInputRef} 
                 onChange={handleFileSelect} 
-                accept="image/*" 
+                accept="image/*,application/pdf,text/plain,text/xml,text/csv,application/json" 
                 className="hidden" 
             />
             
@@ -260,7 +265,7 @@ export default function Home() {
               />
               <Button 
                   onClick={handleSend} 
-                  disabled={isLoading || (!input.trim() && !selectedImage)}
+                  disabled={isLoading || (!input.trim() && !selectedFile)}
                   size="icon"
                   className="absolute right-2 top-2 bottom-2 h-12 w-12 bg-white/[0.05] border border-white/[0.05] hover:bg-cyan-950/40 hover:border-cyan-900/50 text-cyan-500 rounded-xl transition-all duration-500 disabled:opacity-30 disabled:hover:bg-transparent"
               >
