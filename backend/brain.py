@@ -21,9 +21,20 @@ load_dotenv(dotenv_path=env_path)
 API_KEY = os.getenv("GEMINI_API_KEY")
 PINECONE_KEY = os.getenv("PINECONE_API_KEY")
 
-client = genai.Client(api_key=API_KEY)
-pc = Pinecone(api_key=PINECONE_KEY)
-index = pc.Index("vision-memory")
+try:
+    client = genai.Client(api_key=API_KEY) if API_KEY else None
+except Exception as e:
+    print(f"⚠️ Warning: Gemini API initialization failed: {e}")
+    client = None
+
+try:
+    pc = Pinecone(api_key=PINECONE_KEY) if PINECONE_KEY else None
+    index = pc.Index("vision-memory") if pc else None
+except Exception as e:
+    print(f"⚠️ Warning: Pinecone initialization failed: {e}")
+    pc = None
+    index = None
+
 MODEL_NAME = "gemini-2.0-flash-lite-preview-02-05"
 
 app = FastAPI(title="Vision AI Backend")
@@ -84,6 +95,9 @@ def get_history():
 
 def retrieve_memory(query: str):
     print(f"🔍 Searching memory for: {query}")
+    if not index or not client:
+        return "", "\n⚠️ Memory offline: API keys missing."
+        
     try:
         response = client.models.embed_content(
             model="text-embedding-004", contents=query)
@@ -94,7 +108,7 @@ def retrieve_memory(query: str):
         memories = ""
         debug_log = ""
 
-        if results['matches']:
+        if results.get('matches'):
             for match in results['matches']:
                 # FORCE ACCEPT EVERYTHING for testing
                 text = match['metadata']['text']
@@ -106,7 +120,7 @@ def retrieve_memory(query: str):
 
         return memories, debug_log
     except Exception as e:
-        return "", f"Error: {e}"
+        return "", f"\n⚠️ Error: {e}"
 
 # --- 3. CHAT ENDPOINT ---
 
@@ -166,21 +180,31 @@ def chat_endpoint(request: ChatRequest):
     # Process image if provided
     if request.image:
         try:
-            header, encoded = request.image.split(",", 1)
-            mime_type = header.split(":")[1].split(";")[0]
+            if "," in request.image:
+                header, encoded = request.image.split(",", 1)
+                mime_type = header.split(":")[1].split(";")[0]
+            else:
+                encoded = request.image
+                mime_type = "image/jpeg"
+                
             image_bytes = base64.b64decode(encoded)
             contents.append(types.Part.from_bytes(data=image_bytes, mime_type=mime_type))
         except Exception as e:
             print(f"⚠️ Error parsing image: {e}")
+            full_reply = f"🧠 **MEMORY LOG:**\n⚠️ Image processing failed.\n\n🤖 **AI:**\nI could not read the uploaded image due to an encoding error."
+            return {"reply": full_reply}
 
     # 3. Get AI Reply (WITH CRASH PROTECTION)
-    try:
-        response = client.models.generate_content(
-            model=MODEL_NAME, contents=contents)
-        ai_reply = response.text
-    except Exception as e:
-        print(f"⚠️ API ERROR: {e}")
-        ai_reply = f"⚠️ **API ERROR:** {e}\n\nBUT... I successfully searched your memory! See the log above. ☝️"
+    if not client:
+        ai_reply = "⚠️ **API ERROR:** Gemini API key is missing. System offline."
+    else:
+        try:
+            response = client.models.generate_content(
+                model=MODEL_NAME, contents=contents)
+            ai_reply = response.text
+        except Exception as e:
+            print(f"⚠️ API ERROR: {e}")
+            ai_reply = f"⚠️ **API ERROR:** {e}\n\nBUT... I successfully searched your memory! See the log above. ☝️"
 
     full_reply = f"🧠 **MEMORY LOG:**{debug_info}\n\n🤖 **AI:**\n{ai_reply}"
 

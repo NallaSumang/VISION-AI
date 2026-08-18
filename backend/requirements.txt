@@ -2,7 +2,7 @@ fastapi
 uvicorn
 google-genai
 python-multipart
-pydantic
+pydantic>=2.9.0
 pillow
 python-dotenv
 pinecone-client
