@@ -39,14 +39,13 @@ MODEL_NAME = "gemini-2.0-flash-lite-preview-02-05"
 
 app = FastAPI(title="Vision AI Backend")
 
-# --- CORS: Only allow your actual frontend domains ---
-ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://localhost:3005").split(",")
+# --- CORS: Allow all origins for production ---
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,
-    allow_credentials=True,
-    allow_methods=["GET", "POST"],
-    allow_headers=["Content-Type"],
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # --- RATE LIMITING: 10 requests per minute per IP ---
