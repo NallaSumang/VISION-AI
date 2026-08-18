@@ -7,7 +7,7 @@
 
 ## 📖 Overview
 
-**VISION-AI** is a multimodal generative AI application combining a Next.js frontend with a Python/FastAPI backend. The system captures text and image inputs, processes them through Google Gemini for inference, and persists conversational memory via Pinecone vector search for long-duration context retention.
+**VISION-AI** is a multi-modal generative AI application combining a Next.js frontend with a Python/FastAPI backend. The system captures text, images, and documents (PDF/CSV/JSON), processes them through Google's absolute latest Gemini models for high-speed inference, and persists conversational memory via a Pinecone vector database.
 
 ## 🏗️ System Architecture
 
@@ -18,38 +18,37 @@
 │   Port 3005 (dev)   │         │                          │
 └─────────────────────┘         │  ┌────────────────────┐  │
                                 │  │ Google Gemini       │  │
-                                │  │ (gemini-2.0-flash-  │  │
-                                │  │  lite-preview)      │  │
+                                │  │ (gemini-3.6-flash,  │  │
+                                │  │  gemini-embedding-2)│  │
                                 │  └────────────────────┘  │
                                 │  ┌────────────────────┐  │
                                 │  │ Pinecone           │  │
                                 │  │ (vision-memory idx) │  │
                                 │  └────────────────────┘  │
-                                │  ┌────────────────────┐  │
-                                │  │ chat_history.json   │  │
-                                │  │ (local file I/O)    │  │
+                                │  │ Ephemeral Memory    │  │
+                                │  │ (chat_history.json) │  │
                                 │  └────────────────────┘  │
                                 └──────────────────────────┘
 ```
 
-- **Frontend Interface:** Next.js 16 application handling real-time multimodal user interactions (text + image upload). Deployed on **Vercel**.
-- **Backend Engine:** Python FastAPI service (`backend/brain.py`) that processes LLM requests and image parsing. Deployed on **Render** as the `my-ai-brain` service.
-- **AI Model:** Google Gemini (`gemini-2.0-flash-lite-preview-02-05`) via the `google-genai` SDK for text generation and image understanding.
-- **Vector Memory:** Pinecone (`vision-memory` index) for persistent semantic memory across conversations — enabling long-duration context retention.
-- **Local State:** Conversation history is also serialized to `chat_history.json` for local backup.
+- **Frontend Interface:** Next.js 16 application handling real-time multi-modal user interactions (text + image + document upload). Deployed on **Vercel**.
+- **Backend Engine:** Python FastAPI service (`backend/brain.py`) with strict dependency pinning for deterministic deploys. Deployed on **Render** as the `my-ai-brain` service.
+- **AI Model:** Google Gemini (`gemini-3.6-flash`) via the modern `google-genai` SDK for ultra-fast text, document, and image understanding.
+- **Vector Memory:** Pinecone (`vision-memory` index) for persistent semantic memory. Embeddings use `gemini-embedding-2` scaled down elastically to 768-dimensions for legacy index compatibility.
+- **Local State:** Ephemeral conversation history is serialized to `chat_history.json` (wiped cleanly between server reboots).
 
 ### ⚠️ Scalability Note
 
-The `chat_history.json` file-based persistence works on Render's persistent disk but would fail on ephemeral serverless environments (AWS Lambda, Vercel Functions). The Pinecone vector store provides the durable memory layer for production.
+The `chat_history.json` file is explicitly removed from git tracking to prevent ghost data propagation. It acts purely as a temporary runtime state in Render's ephemeral environment, while Pinecone provides the permanent durable memory layer for production.
 
 ## 🛠️ Tech Stack
 
 | Layer | Technology |
 | :--- | :--- |
 | **Frontend** | Next.js 16, React 19, TypeScript |
-| **Backend** | Python 3.11, FastAPI, Uvicorn |
-| **AI Model** | Google Gemini (`gemini-2.0-flash-lite-preview`) |
-| **Vector DB** | Pinecone (`vision-memory` index) |
+| **Backend** | Python 3.11, FastAPI (Hard-pinned) |
+| **AI Model** | Google Gemini (`gemini-3.6-flash`) |
+| **Vector DB** | Pinecone (`gemini-embedding-2` @ 768d) |
 | **UI** | shadcn/ui (Radix), Tailwind CSS v4, Lucide icons |
 | **Frontend Hosting** | Vercel |
 | **Backend Hosting** | Render (`my-ai-brain`) |
