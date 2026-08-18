@@ -35,7 +35,7 @@ except Exception as e:
     pc = None
     index = None
 
-MODEL_NAME = "gemini-2.0-flash"
+MODEL_NAME = "gemini-3.6-flash"
 
 app = FastAPI(title="Vision AI Backend")
 
