@@ -14,7 +14,7 @@
 ```text
 ┌─────────────────────┐         ┌──────────────────────────┐
 │   Next.js Frontend  │  HTTP   │  Python/FastAPI Backend  │
-│   (Vercel)          │────────▶│  (Render: "my-ai-brain") │
+│   (Vercel)          │-------->│  (Render: "my-ai-brain") │
 │   Port 3005 (dev)   │         │                          │
 └─────────────────────┘         │  ┌────────────────────┐  │
                                 │  │ Google Gemini      │  │
