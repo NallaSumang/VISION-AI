@@ -11,22 +11,23 @@
 
 ## 🏗️ System Architecture
 
-```
+```text
 ┌─────────────────────┐         ┌──────────────────────────┐
-│   Next.js Frontend  │  HTTP   │   Python/FastAPI Backend  │
-│   (Vercel)          │────────▶│   (Render: "my-ai-brain") │
+│   Next.js Frontend  │  HTTP   │  Python/FastAPI Backend  │
+│   (Vercel)          │────────▶│  (Render: "my-ai-brain") │
 │   Port 3005 (dev)   │         │                          │
 └─────────────────────┘         │  ┌────────────────────┐  │
-                                │  │ Google Gemini       │  │
-                                │  │ (gemini-3.6-flash,  │  │
-                                │  │  gemini-embedding-2)│  │
+                                │  │ Google Gemini      │  │
+                                │  │ (gemini-3.6-flash, │  │
+                                │  │ gemini-embedding-2)│  │
                                 │  └────────────────────┘  │
                                 │  ┌────────────────────┐  │
                                 │  │ Pinecone           │  │
-                                │  │ (vision-memory idx) │  │
+                                │  │ (vision-memory idx)│  │
                                 │  └────────────────────┘  │
-                                │  │ Ephemeral Memory    │  │
-                                │  │ (chat_history.json) │  │
+                                │  ┌────────────────────┐  │
+                                │  │ Ephemeral Memory   │  │
+                                │  │ (chat_history.json)│  │
                                 │  └────────────────────┘  │
                                 └──────────────────────────┘
 ```
