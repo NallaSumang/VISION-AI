@@ -41,6 +41,13 @@
 
 The `chat_history.json` file is explicitly removed from git tracking to prevent ghost data propagation. It acts purely as a temporary runtime state in Render's ephemeral environment, while Pinecone provides the permanent durable memory layer for production.
 
+### 🧠 Adaptive Multi-Turn Context
+
+The system maintains real-time conversational memory across multiple turns by dynamically injecting the last 10 messages into the Gemini API. 
+* **Strict Role Sequencing**: The system automatically prunes history to ensure every prompt sequence strictly begins with a `user` role to comply with `google-genai` SDK constraints.
+* **Response Calibration**: A strict, adaptive system instruction calibrates response lengths dynamically based on the query type (e.g., casual greeting vs. technical question).
+* **Flex-Col Mobile UI**: Chat bubbles utilize a vertical layout (`flex-col`) separating avatar/labels from message text to drastically improve readability on mobile devices.
+
 ## 🛠️ Tech Stack
 
 | Layer | Technology |
