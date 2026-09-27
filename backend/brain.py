@@ -171,18 +171,60 @@ def chat_endpoint(request: ChatRequest):
     # 1. Get Memory
     memory_text, debug_info = retrieve_memory(request.message)
 
-    # 2. Build Prompt
-    final_prompt = f"""
-    SYSTEM: You are a helpful assistant.
-    Here is what you know about the user from their Long-Term Memory:
-    {memory_text}
-    
-    USER: {request.message}
-    """
+    # 2. Build adaptive system instruction (separate from conversation turns)
+    memory_block = (
+        f"Relevant context from memory (weave in naturally, never say 'I remember'):\n{memory_text}"
+        if memory_text else ""
+    )
 
-    contents = [final_prompt]
-    
-    # Process image if provided
+    system_instruction = f"""You are VISION AI — a sharp, context-aware assistant with multimodal intelligence and persistent memory.
+You have full knowledge of this conversation — always refer back to earlier messages naturally.
+
+RESPONSE CALIBRATION RULES (apply every reply):
+- Casual / greeting / simple factual → 1-3 sentences max, conversational tone, NO bullet points
+- Conversational / follow-up ("tell me more", "explain that", "why?") → build on the previous answer directly
+- Technical / how-to / explanation → concise structured response, code blocks or numbered steps only when genuinely helpful
+- Image analysis → precise visual observations + actionable insight, 3-6 sentences
+- Complex multi-part / research question → well-organized with headers, lean — no padding or filler
+- Math / calculation → show working briefly, give clear answer
+
+NEVER pad a simple answer. NEVER lose context of what was just discussed.
+Match the user's tone exactly (casual→casual, technical→precise).
+Use markdown only when it genuinely aids clarity — not as decoration.
+
+{memory_block}"""
+
+    # 3. Load recent conversation turns for multi-turn context
+    history_file = backend_dir / "chat_history.json"
+    raw_history: list = []
+    if history_file.exists():
+        try:
+            with open(history_file, "r", encoding="utf-8") as f:
+                raw_history = json.load(f)
+        except Exception:
+            pass
+
+    # Keep last 20 messages (= 10 turns) — enough context without blowing token budget
+    recent = raw_history[-20:]
+
+    # Convert history to Gemini typed Content objects
+    contents: list[types.Content] = []
+    for msg in recent:
+        gemini_role = "user" if msg.get("role") == "user" else "model"
+        text = ""
+        if msg.get("parts") and isinstance(msg["parts"], list):
+            text = " ".join(p.get("text", "") for p in msg["parts"] if p.get("text"))
+        elif msg.get("content"):
+            text = msg["content"]
+        if text.strip():
+            contents.append(
+                types.Content(role=gemini_role, parts=[types.Part.from_text(text)])
+            )
+
+    # Build current turn parts (text + optional image)
+    current_parts: list[types.Part] = [
+        types.Part.from_text(request.message or "Analyze this image")
+    ]
     if request.image:
         try:
             if "," in request.image:
@@ -191,33 +233,36 @@ def chat_endpoint(request: ChatRequest):
             else:
                 encoded = request.image
                 mime_type = "image/jpeg"
-                
             image_bytes = base64.b64decode(encoded)
-            contents.append(types.Part.from_bytes(data=image_bytes, mime_type=mime_type))
+            current_parts.append(types.Part.from_bytes(data=image_bytes, mime_type=mime_type))
         except Exception as e:
             print(f"⚠️ Error parsing image: {e}")
-            full_reply = f"⚠️ Image processing failed. I could not read the uploaded file due to an encoding error."
-            return {"reply": full_reply}
+            return {"reply": "⚠️ Image processing failed. Could not read the uploaded file."}
 
-    # 3. Get AI Reply (WITH CRASH PROTECTION)
+    contents.append(types.Content(role="user", parts=current_parts))
+
+    # 4. Get AI Reply — multi-turn with system instruction
     if not client:
         ai_reply = "⚠️ **API ERROR:** Gemini API key is missing. System offline."
     else:
         try:
             response = client.models.generate_content(
-                model=MODEL_NAME, contents=contents)
+                model=MODEL_NAME,
+                contents=contents,
+                config=types.GenerateContentConfig(
+                    system_instruction=system_instruction,
+                    max_output_tokens=2048,
+                )
+            )
             ai_reply = response.text
         except Exception as e:
             print(f"⚠️ API ERROR: {e}")
             ai_reply = f"⚠️ **API ERROR:** {e}"
 
-    full_reply = ai_reply
+    # 5. Save new turn to history
+    append_to_history(request.message, ai_reply, bool(request.image))
 
-    # 4. Save to global history
-    append_to_history(request.message, full_reply, bool(request.image))
-
-    # 5. Return Visible Debug Info
-    return {"reply": full_reply}
+    return {"reply": ai_reply}
 
 
 if __name__ == "__main__":

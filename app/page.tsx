@@ -166,19 +166,34 @@ export default function Home() {
         
         {messages.map((msg, index) => (
           <div key={index} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-            <div className={`flex gap-3 md:gap-4 max-w-[95%] md:max-w-[85%] ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}>
-              <div className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center shrink-0 mt-1 border ${
-                msg.role === "user" ? "bg-cyan-950/30 border-cyan-900/50 shadow-[0_0_15px_rgba(8,145,178,0.2)]" : "bg-black/50 border-white/[0.05]"
-              }`}>
-                {msg.role === "user" ? <User className="w-3 h-3 md:w-4 md:h-4 text-cyan-400" strokeWidth={1.5} /> : <Bot className="w-4 h-4 md:w-5 md:h-5 text-cyan-700" strokeWidth={1.5} />}
-              </div>
-              
-              <div className={`rounded-2xl md:rounded-3xl p-4 md:p-5 shadow-sm text-sm font-light leading-relaxed break-words overflow-hidden ${
-                  msg.role === "user" 
-                  ? "bg-white/[0.02] border border-white/[0.05] text-zinc-200 rounded-tr-sm" 
-                  : "bg-cyan-950/10 border border-cyan-900/20 text-zinc-300 rounded-tl-sm"
+            <div className={`flex flex-col gap-2 max-w-[90%] md:max-w-[80%] ${msg.role === "user" ? "items-end" : "items-start"}`}>
+
+              {/* Icon + label — always on top */}
+              <div className={`flex items-center gap-2 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}>
+                <div className={`w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center shrink-0 border ${
+                  msg.role === "user"
+                    ? "bg-cyan-950/30 border-cyan-900/50 shadow-[0_0_15px_rgba(8,145,178,0.2)]"
+                    : "bg-black/50 border-white/[0.05]"
                 }`}>
-                <ReactMarkdown 
+                  {msg.role === "user"
+                    ? <User className="w-3 h-3 md:w-3.5 md:h-3.5 text-cyan-400" strokeWidth={1.5} />
+                    : <Bot className="w-3.5 h-3.5 md:w-4 md:h-4 text-cyan-700" strokeWidth={1.5} />
+                  }
+                </div>
+                <span className={`text-[9px] uppercase tracking-[0.25em] font-medium ${
+                  msg.role === "user" ? "text-cyan-800/60" : "text-zinc-600"
+                }`}>
+                  {msg.role === "user" ? "You" : "Vision AI"}
+                </span>
+              </div>
+
+              {/* Content bubble — directly below icon */}
+              <div className={`rounded-2xl md:rounded-3xl p-4 md:p-5 shadow-sm text-sm font-light leading-relaxed break-words overflow-hidden w-full ${
+                  msg.role === "user"
+                  ? "bg-white/[0.02] border border-white/[0.05] text-zinc-200"
+                  : "bg-cyan-950/10 border border-cyan-900/20 text-zinc-300"
+                }`}>
+                <ReactMarkdown
                   components={{
                       img: ({node, ...props}) => props.src ? <img className="max-w-full md:max-w-md rounded-xl md:rounded-2xl mb-4 shadow-xl border border-cyan-900/20" {...props} /> : null,
                       code: ({node, ...props}) => <code className="bg-black/60 rounded px-2 py-1 font-mono text-[10px] md:text-[11px] text-cyan-300/80 border border-white/[0.02]" {...props} />,
@@ -193,26 +208,30 @@ export default function Home() {
                   {msg.content}
                 </ReactMarkdown>
               </div>
+
             </div>
           </div>
         ))}
         
         {isLoading && (
-            <div className="flex justify-start">
-              <div className="flex gap-3 md:gap-4 max-w-[95%] md:max-w-[85%]">
-                <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-black/50 border border-white/[0.05] flex items-center justify-center shrink-0 mt-1">
-                  <Bot className="w-4 h-4 md:w-5 md:h-5 text-cyan-700" strokeWidth={1.5} />
+          <div className="flex justify-start">
+            <div className="flex flex-col gap-2 max-w-[90%] md:max-w-[80%] items-start">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-black/50 border border-white/[0.05] flex items-center justify-center shrink-0">
+                  <Bot className="w-3.5 h-3.5 md:w-4 md:h-4 text-cyan-700" strokeWidth={1.5} />
                 </div>
-                <div className="bg-transparent p-4 md:p-6 rounded-3xl rounded-tl-sm text-cyan-700 text-[10px] md:text-xs tracking-widest uppercase flex items-center gap-3 md:gap-4">
-                  <div className="flex gap-1 md:gap-1.5">
-                    <div className="w-1 h-1 bg-cyan-600 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                    <div className="w-1 h-1 bg-cyan-600 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                    <div className="w-1 h-1 bg-cyan-600 rounded-full animate-bounce"></div>
-                  </div>
-                  <span className="font-medium">Accessing Memory...</span>
+                <span className="text-[9px] uppercase tracking-[0.25em] font-medium text-zinc-600">Vision AI</span>
+              </div>
+              <div className="p-4 md:p-5 rounded-3xl text-cyan-700 text-[10px] md:text-xs tracking-widest uppercase flex items-center gap-3 md:gap-4">
+                <div className="flex gap-1 md:gap-1.5">
+                  <div className="w-1.5 h-1.5 bg-cyan-600 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                  <div className="w-1.5 h-1.5 bg-cyan-600 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                  <div className="w-1.5 h-1.5 bg-cyan-600 rounded-full animate-bounce"></div>
                 </div>
+                <span className="font-medium">Processing...</span>
               </div>
             </div>
+          </div>
         )}
         <div ref={messagesEndRef} />
       </div>
@@ -249,7 +268,7 @@ export default function Home() {
             <Button 
                 variant="outline" 
                 size="icon"
-                className="shrink-0 h-14 w-14 md:h-16 md:w-16 rounded-xl md:rounded-2xl bg-white/[0.02] border-white/[0.05] text-zinc-500 hover:text-cyan-400 hover:border-cyan-900/50 hover:bg-cyan-950/20 transition-all duration-500 shadow-xl"
+                className="shrink-0 h-14 w-14 md:h-16 md:w-16 rounded-xl md:rounded-2xl bg-white/[0.02] border-white/[0.05] text-zinc-500 hover:text-cyan-400 hover:border-cyan-900/50 hover:bg-cyan-950/20 transition-colors duration-150 shadow-xl"
                 onClick={() => fileInputRef.current?.click()}
             >
                 <Paperclip className="w-4 h-4 md:w-5 md:h-5" strokeWidth={1.5} />
@@ -267,7 +286,7 @@ export default function Home() {
                   onClick={handleSend} 
                   disabled={isLoading || (!input.trim() && !selectedFile)}
                   size="icon"
-                  className="absolute right-2 top-2 bottom-2 h-12 w-12 bg-white/[0.05] border border-white/[0.05] hover:bg-cyan-950/40 hover:border-cyan-900/50 text-cyan-500 rounded-xl transition-all duration-500 disabled:opacity-30 disabled:hover:bg-transparent"
+                  className="absolute right-2 top-2 bottom-2 h-12 w-12 bg-white/[0.05] border border-white/[0.05] hover:bg-cyan-950/40 hover:border-cyan-900/50 text-cyan-500 rounded-xl transition-colors duration-150 disabled:opacity-30 disabled:hover:bg-transparent"
               >
                   <Send className="w-4 h-4 ml-0.5" strokeWidth={1.5} />
               </Button>
