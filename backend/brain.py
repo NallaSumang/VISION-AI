@@ -206,6 +206,10 @@ Use markdown only when it genuinely aids clarity — not as decoration.
 
     # Keep last 20 messages (= 10 turns) — enough context without blowing token budget
     recent = raw_history[-20:]
+    
+    # Gemini requires the conversation history to ALWAYS start with a 'user' turn.
+    while recent and recent[0].get("role") != "user":
+        recent.pop(0)
 
     # Convert history to Gemini typed Content objects
     contents: list[types.Content] = []
@@ -218,12 +222,12 @@ Use markdown only when it genuinely aids clarity — not as decoration.
             text = msg["content"]
         if text.strip():
             contents.append(
-                types.Content(role=gemini_role, parts=[types.Part.from_text(text)])
+                types.Content(role=gemini_role, parts=[types.Part.from_text(text=text)])
             )
 
     # Build current turn parts (text + optional image)
     current_parts: list[types.Part] = [
-        types.Part.from_text(request.message or "Analyze this image")
+        types.Part.from_text(text=request.message or "Analyze this image")
     ]
     if request.image:
         try:
